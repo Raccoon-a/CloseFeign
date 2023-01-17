@@ -1,21 +1,22 @@
 package cn.rylan.springboot;
 
-import cn.rylan.annotation.FeignClient;
+import cn.rylan.annotation.CloseFeignClient;
 import cn.rylan.proxy.CglibProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
+@Slf4j
 public class CustomizeFactoryBean<T> implements FactoryBean<T> {
-
-    private Logger logger = LoggerFactory.getLogger(CustomizeFactoryBean.class);
-
     private Class<T> interfaceClass;
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @Value("${spring.cloud.closeFeign.balancer}")
+    private String balanceType;
 
 
     public CustomizeFactoryBean(Class<T> interfaceClass) {
@@ -26,16 +27,15 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
     }
 
     @Override
-    public T getObject()  {
-        logger.info("正在为{}生成代理对象", interfaceClass.getName());
-        FeignClient feignClient = interfaceClass.getAnnotation(FeignClient.class);
-        String serviceName = feignClient.serviceName();
-        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient);
+    public T getObject() {
+        CloseFeignClient closeFeignClient = interfaceClass.getAnnotation(CloseFeignClient.class);
+        String serviceName = closeFeignClient.serviceName();
+        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient,balanceType);
         T proxy = (T) cglibProxy.getProxy(interfaceClass);
         if (proxy == null) {
-            logger.error("{}代理对象,生成失败", interfaceClass.getName());
+            log.error("{}代理对象,生成失败", interfaceClass.getName());
         }
-        logger.info("{}代理对象,生成成功", interfaceClass.getName());
+        log.info("{}代理对象,生成成功", interfaceClass.getName());
         return proxy;
     }
 
@@ -49,7 +49,5 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
         return true;
     }
 
-    public void setServiceInterface(Class<T> serviceInterface) {
-        this.interfaceClass = serviceInterface;
-    }
+
 }

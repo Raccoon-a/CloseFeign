@@ -7,6 +7,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 
 public class FeignClientScanner extends ClassPathBeanDefinitionScanner {
@@ -14,6 +16,7 @@ public class FeignClientScanner extends ClassPathBeanDefinitionScanner {
     public FeignClientScanner(BeanDefinitionRegistry registry) {
         super(registry);
     }
+
     //扫描
     protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
@@ -31,7 +34,9 @@ public class FeignClientScanner extends ClassPathBeanDefinitionScanner {
 
     protected void registerDefaultFilters() {
         this.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
-            if (metadataReader.getClassMetadata().isInterface()) return true;
+            if (metadataReader.getClassMetadata().isInterface()) {
+                return true;
+            }
             return false;
         });
     }

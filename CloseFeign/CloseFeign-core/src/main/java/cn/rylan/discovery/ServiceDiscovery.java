@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Scope("prototype")
 public class ServiceDiscovery {
 
     private DiscoveryClient discoveryClient;

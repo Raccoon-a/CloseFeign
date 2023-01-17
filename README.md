@@ -1,29 +1,49 @@
 # CloseFeign
 
-## 简述
-DEMO项目
-[√]  服务发现
-[√]  基于注解
-[x]  超时处理
-[x]  可替换HttpClient
 <details><summary>展开/收起</summary>
 
-缘由是前天在刷知乎的时候看到这样一个问题：为什么说Feign是伪RPC？https://www.zhihu.com/question/298707085 有些评论里的回答过于逆天，总是在拿传输层TCP协议和应用层HTTP协议比较
+缘由是前天在刷知乎的时候看到这样一个问题：[为什么说Feign是伪RPC？](https://www.zhihu.com/question/298707085) 有些评论里的回答过于逆天，总是在拿传输层TCP协议和应用层HTTP协议比较这明显认知有偏差，其实无论是下面哪种组合，本质上都是告知对方要执行哪个方法，什么参数，对方执行完后返回结果
 
-首先说明个人观点，我认为Feign就是RPC框架，因为在用法上它和Dubbo，Montan等RPC框架无异，都是不需要关注接口的具体实现即可完成远程调用，正巧最近在改之前写的RPC框架bug，那个是自定义应用层协议使用Netty构建了客户端和服务端进行通信，所以我就在想试试写一下Feign这种以访问对方暴露出HTTP REST接口的方式远程调用的框架，原理和之前写的基本没区别：
+[1] 应用层协议HTTP + HttpClient
 
+[2] 应用层协议自定义/HTTP2 + 使用Netty自己构建的Client
 
-只不过需要按照http协议的格式去访问对方暴露的接口，但本质上都是告知对方要执行哪个方法，什么参数，对方执行完后返回结果
+首先说明个人观点，我觉得在它算是微服务生态的RPC框架，因为在用法上和Dubbo，Montan等RPC框架几乎无异，都是不需要关注接口的具体实现即可完成远程服务方法的调用。
 
-简述过程：向IOC容器中注入带有注解的接口对象(动态代理生成)，当执行bean的方法时会触发代理对象的Invoke()方法向远端发送请求，然后返回结果，这样就对于使用者屏蔽了服务发现和网络通信的细节，让使用者像调用本地接口一样简单。
+简述过程：向IOC容器中注入带有注解的接口类型对象(动态代理生成)，当执行FeignClient Bean中的方法时会触发代理对象Invoke()方法向远端发送请求，然后返回结果，这样就对于使用者屏蔽了服务发现和网络通信的细节，让使用者像调用本地接口一样简单。
 
-正好最近在改之前写的自定义应用层协议RPC的各种bug，用Netty构建服务端，客户端实现双方通信写麻了，而像Feign这种使用HttpClient发送请求太方便了，所以写个小demo，由于不知道这个框架叫什么，众所周知SpringCloud有个组件叫OpenFeign，所以就叫CloseFeign了（狗头）
+正好最近在改之前写的自定义应用层协议RPC的各种bug，用Netty构建服务端，客户端实现双方通信写麻了，所以我就在想试试写一下Feign这种以访问对方暴露出HTTP REST接口的方式远程调用的框架，写个小demo由于不知道这个框架叫什么，众所周知SpringCloud有个组件叫OpenFeign，所以就叫CloseFeign了（狗头）
 </details>
 
-## Getting started
-自定义注解： `@FeignClient` `@FeignRequestMapping` `@EnableCloseFeign`
+## DEMO项目简述
 
-SpringMVC注解：`@PathVariable`  `@RequestBody` 
+[√]  服务发现
+
+[√]  负载均衡
+
+[x]  超时处理
+
+[x]  可替换HttpClient
+
+## Getting started
+
+`application.yaml`
+```yaml
+server:
+  port: 4000
+spring:
+  application:
+    name: test
+  cloud:
+    closeFeign:
+      balancer: random //负载均衡配置 [roundRobin轮询 - random随机]
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+```
+
+
+
 ```java
 @SpringBootApplication
 @EnableCloseFeign(basePackages = {"com.example.server.feign"})
@@ -35,20 +55,20 @@ public class TestServerApplication {
 ```
 
 ```java
-@FeignClient(serviceName = "core-application")
+@CloseFeignClient(serviceName = "core-application")
 public interface CloseFeignClient {
 
     @FeignRequestMapping(uri = "/material/id/1", type = "GET")
-    public CommonReturnType getById();
+    CommonReturnType getById();
 
     @FeignRequestMapping(uri = "/material/id/{id}", type = "GET")
-    public CommonReturnType getById(@PathVariable("id") Long id );
+    CommonReturnType getById(@PathVariable("id") Long id );
 
     @FeignRequestMapping(uri = "/material/names", type = "POST")
-    public CommonReturnType getBatch(@RequestBody List<String> names);
+    CommonReturnType getBatch(@RequestBody List<String> names);
 
     @FeignRequestMapping(uri = "/material/test", type = "POST")
-    public CommonReturnType test(@RequestBody Material material);
+    CommonReturnType test(@RequestBody Material material);
 }
 ```
 ```java

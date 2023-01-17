@@ -1,6 +1,5 @@
 package com.example.server.controller;
 
-import cn.rylan.annotation.FeignClient;
 import com.example.server.feign.CommonReturnType;
 import com.example.server.feign.CloseFeignClient;
 import com.example.server.feign.Material;

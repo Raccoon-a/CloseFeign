@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "",
+      "type": "cn.rylan.springboot.Config",
+      "sourceType": "cn.rylan.springboot.Config"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}

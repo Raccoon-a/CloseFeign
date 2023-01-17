@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class RequestHandler {
 
-    private MethodTemplate methodTemplate;
+    private final MethodTemplate methodTemplate;
 
     public RequestHandler(MethodTemplate methodTemplate) {
         this.methodTemplate = methodTemplate;
@@ -15,7 +15,6 @@ public class RequestHandler {
 
 
     public Object http(String url, String methodType) throws JsonProcessingException {
-        Object result = null;
         Class<?> returnType = methodTemplate.getReturnType();
         RestTemplateAPI restTemplateAPI = new RestTemplateAPI();
 

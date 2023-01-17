@@ -11,19 +11,16 @@ import java.util.Map;
 
 public class URLHandler {
 
-    private ServiceInstance instance;
+    private final ServiceInstance instance;
 
     private String uri;
 
-    private MethodTemplate methodTemplate;
-
-    private MethodHandler methodHandler;
-
+    private final MethodTemplate methodTemplate;
 
     public URLHandler(ServiceInstance instance, Method method, Object[] objects, String uri) {
         this.uri = uri;
         this.instance = instance;
-        methodHandler = new MethodHandler(method, objects);
+        MethodHandler  methodHandler = new MethodHandler(method, objects);
         methodTemplate = methodHandler.handler();
     }
 
