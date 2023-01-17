@@ -1,5 +1,6 @@
 package cn.rylan.client;
 
+import cn.rylan.model.Material;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -18,23 +19,13 @@ public class RestTemplateAPI {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    public Object get(String address, String port, String uri, Class<?> returnTYpe) throws JsonProcessingException {
-        String json = restTemplate.getForObject("http://" + address + ":" + port + uri, String.class);
+    public Object get(String url, Class<?> returnTYpe) throws JsonProcessingException {
+        String json = restTemplate.getForObject(url, String.class);
         return objectMapper.readValue(json, returnTYpe);
     }
 
-    public Object get(String address, String port, String uri, Object[] parmaValues, Class<?> returnTYpe) throws JsonProcessingException {
-       String pathVariable = null;
-       for (Object value : parmaValues){
-           pathVariable = value.toString()+"/";
-       }
-        System.out.println("http://" + address + ":" + port + uri+pathVariable);
-        String json = restTemplate.getForObject("http://" + address + ":" + port + uri+pathVariable, String.class);
-        return objectMapper.readValue(json, returnTYpe);
-    }
-
-    public Object post(String address, String port, String uri, Object parmaValues, Class<?> returnTYpe) throws JsonProcessingException {
-        String json = restTemplate.postForObject("http://" + address + ":" + port + uri, parmaValues, String.class);
+    public Object post(String url, Object body, Class<?> returnTYpe) throws JsonProcessingException {
+        String json = restTemplate.postForObject(url,body, String.class);
         return objectMapper.readValue(json, returnTYpe);
     }
 

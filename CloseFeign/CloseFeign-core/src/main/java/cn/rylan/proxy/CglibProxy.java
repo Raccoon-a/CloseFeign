@@ -3,7 +3,10 @@ package cn.rylan.proxy;
 import cn.rylan.annotation.FeignRequestMapping;
 import cn.rylan.client.RestTemplateAPI;
 import cn.rylan.discovery.ServiceDiscovery;
-import cn.rylan.discovery.ServiceInstanceInfo;
+import cn.rylan.handler.RequestHandler;
+import cn.rylan.handler.URLHandler;
+import cn.rylan.model.MethodTemplate;
+import cn.rylan.model.ServiceInstance;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -51,24 +54,19 @@ public class CglibProxy implements MethodInterceptor {
             FeignRequestMapping feignRequestMapping = method.getAnnotation(FeignRequestMapping.class);
             String uri = feignRequestMapping.uri();
             String type = feignRequestMapping.type();
-            Class<?> returnType = method.getReturnType();
             //TODO 服务发现
             ServiceDiscovery serviceDiscovery = new ServiceDiscovery(discoveryClient);
-            ServiceInstanceInfo instanceInfo = serviceDiscovery.getAllService(serviceName).get(0);
-            String address = instanceInfo.getIp();
-            String port = instanceInfo.getPort();
-            //TODO 远程调用
-            RestTemplateAPI restTemplateAPI = new RestTemplateAPI();
-            if (type.equals("GET")) {
-                if (objects.length == 0)
-                    return restTemplateAPI.get(address, port, uri, returnType);
-                else
-                    return restTemplateAPI.get(address, port, uri, objects, returnType);
-            }
-            if (type.equals("POST")) {
-                return restTemplateAPI.post(address, port, uri, objects[0], returnType);
+            ServiceInstance instance = serviceDiscovery.getAllService(serviceName).get(0);
 
-            }
+            //TODO URI处理返回完整的URL
+            URLHandler urlHandler = new URLHandler(instance,method, objects,uri);
+            String URL = urlHandler.getURL();
+            System.out.println(type+": " +URL);
+
+            //TODO 远程调用
+            MethodTemplate methodTemplate = urlHandler.getMethodTemplate();
+            RequestHandler request = new RequestHandler(methodTemplate);
+            return request.http(URL, type);
         }
         return null;
     }

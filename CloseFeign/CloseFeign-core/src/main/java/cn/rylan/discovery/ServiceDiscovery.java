@@ -1,6 +1,6 @@
 package cn.rylan.discovery;
 
-import org.springframework.cloud.client.ServiceInstance;
+import cn.rylan.model.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,10 @@ public class ServiceDiscovery {
         this.discoveryClient = discoveryClient;
     }
 
-    public List<ServiceInstanceInfo> getAllService(String serviceName) {
-        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+    public List<ServiceInstance> getAllService(String serviceName) {
+        List<org.springframework.cloud.client.ServiceInstance> instances = discoveryClient.getInstances(serviceName);
         return instances.stream().map(instance -> {
-            return new ServiceInstanceInfo(instance.getHost(), String.valueOf(instance.getPort()));
+            return new ServiceInstance(instance.getHost(), String.valueOf(instance.getPort()));
         }).collect(Collectors.toList());
     }
 
