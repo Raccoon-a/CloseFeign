@@ -2,13 +2,13 @@
 
 <details><summary>展开/收起</summary>
 
-缘由是前天在刷知乎的时候看到这样一个问题：[为什么说Feign是伪RPC？](https://www.zhihu.com/question/298707085) 有些评论里的回答过于逆天，总是在拿传输层TCP协议和应用层HTTP协议比较这明显认知有偏差，其实无论是下面哪种组合，本质上都是告知对方要执行哪个方法，什么参数，对方执行完后返回结果
+缘由是前天在刷知乎的时候看到这样一个问题：[为什么说Feign是伪RPC？](https://www.zhihu.com/question/298707085) 有些评论里的回答过于逆天，总是在拿传输层TCP协议和应用层HTTP协议比较这明显是认知有偏差，其实无论是下面哪种组合，本质上都是告知对方要执行哪个方法，什么参数，对方执行完后返回结果
 
 [1] 应用层协议HTTP + HttpClient
 
 [2] 应用层协议自定义/HTTP2 + 使用Netty自己构建的Client
 
-首先说明个人观点，我觉得在它算是微服务生态的RPC框架，因为在用法上和Dubbo，Montan等RPC框架几乎无异，都是不需要关注接口的具体实现即可完成远程服务方法的调用。
+首先说明个人观点，我觉得在Feign它是REST客户端的同时也能完成RPC的功能，因为不但支持服务发现并且在用法上和Dubbo，Montan等RPC框架几乎无异，都是不需要关注接口的具体实现即可完成远程服务方法的调用。
 
 简述过程：向IOC容器中注入带有注解的接口类型对象(动态代理生成)，当执行FeignClient Bean中的方法时会触发代理对象Invoke()方法向远端发送请求，然后返回结果，这样就对于使用者屏蔽了服务发现和网络通信的细节，让使用者像调用本地接口一样简单。
 
@@ -27,7 +27,12 @@
 
 ## Getting started
 
-`application.yaml`
+进入目录转存至本地maven仓库供其他项目使用
+
+`cd .\CloseFeign\CloseFeign-core\target\`
+
+`mvn install:install-file -Dfile=CloseFeign-core-0.0.1-SNAPSHOT.jar -DgroupId=cn.rylan -DartifactId=CloseFeign -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar`
+
 ```yaml
 server:
   port: 4000
@@ -41,9 +46,6 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 ```
-
-
-
 ```java
 @SpringBootApplication
 @EnableCloseFeign(basePackages = {"com.example.server.feign"})
@@ -56,7 +58,7 @@ public class TestServerApplication {
 
 ```java
 @CloseFeignClient(serviceName = "core-application")
-public interface CloseFeignClient {
+public interface FeignClient {
 
     @FeignRequestMapping(uri = "/material/id/1", type = "GET")
     CommonReturnType getById();
@@ -76,16 +78,34 @@ public interface CloseFeignClient {
 public class TestController {
 
     @Autowired
-    CloseFeignClient closeFeignClient;
+    FeignClient feignClient;
 
     @GetMapping("/test")
     public CommonReturnType test() {
         ArrayList<String> list = new ArrayList<>(Arrays.asList("西红柿", "玉米"));
-        System.out.println(closeFeignClient.getById());
-        System.out.println(closeFeignClient.getById(1L));
-        System.out.println(closeFeignClient.getBatch(list));
-        return closeFeignClient.test(new Material(1001L, "material", "icon", "category", "desc"));
+        System.out.println(feignClient.getById());
+        System.out.println(feignClient.getById(1L));
+        System.out.println(feignClient.getBatch(list));
+        return feignClient.test(new Material(1001L, "material", "icon", "category", "desc"));
     }
     
 }
+```
+```java
+    @Bean
+    public RequestInterceptor interceptor() {
+        return new RequestInterceptor() {
+            @Override
+            public void apply(RequestTemplate template) {
+                RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+                HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+                String cookie = request.getHeader("Cookie");
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Cookie", cookie);
+                headers.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                template.setHeaders(headers);
+            }
+        };
+    }
 ```

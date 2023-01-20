@@ -6,6 +6,7 @@ import cn.rylan.balancer.Balancer;
 import cn.rylan.discovery.ServiceDiscovery;
 import cn.rylan.handler.RequestHandler;
 import cn.rylan.handler.URLHandler;
+import cn.rylan.http.RequestInterceptor;
 import cn.rylan.model.MethodTemplate;
 import cn.rylan.model.ServiceInstance;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,10 @@ public class CglibProxy implements MethodInterceptor {
 
     private Balancer balancer;
 
-    public CglibProxy(String serviceName, DiscoveryClient discoveryClient, String balanceType) {
+    private RequestInterceptor interceptor;
+
+    public CglibProxy(String serviceName, DiscoveryClient discoveryClient, String balanceType, RequestInterceptor interceptor) {
+        this.interceptor = interceptor;
         init(serviceName, discoveryClient, balanceType);
     }
 
@@ -63,7 +67,7 @@ public class CglibProxy implements MethodInterceptor {
             log.info(type + ": => {}", URL);
             //远程调用
             MethodTemplate methodTemplate = urlHandler.getMethodTemplate();
-            RequestHandler request = new RequestHandler(methodTemplate);
+            RequestHandler request = new RequestHandler(methodTemplate,interceptor);
             return request.http(URL, type);
         }
         return null;

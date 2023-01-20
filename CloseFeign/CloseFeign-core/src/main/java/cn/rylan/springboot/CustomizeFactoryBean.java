@@ -1,6 +1,7 @@
 package cn.rylan.springboot;
 
 import cn.rylan.annotation.CloseFeignClient;
+import cn.rylan.http.RequestInterceptor;
 import cn.rylan.proxy.CglibProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
@@ -14,6 +15,9 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private RequestInterceptor interceptor;
 
     @Value("${spring.cloud.closeFeign.balancer}")
     private String balanceType;
@@ -30,7 +34,7 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
     public T getObject() {
         CloseFeignClient closeFeignClient = interfaceClass.getAnnotation(CloseFeignClient.class);
         String serviceName = closeFeignClient.serviceName();
-        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient,balanceType);
+        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient,balanceType,interceptor);
         T proxy = (T) cglibProxy.getProxy(interfaceClass);
         if (proxy == null) {
             log.error("{}代理对象,生成失败", interfaceClass.getName());

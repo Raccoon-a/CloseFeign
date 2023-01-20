@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @cn.rylan.annotation.CloseFeignClient(serviceName = "core-application")
-public interface CloseFeignClient {
+public interface FeignClient {
 
     @FeignRequestMapping(uri = "/material/id/1", type = "GET")
     CommonReturnType getById0();
@@ -21,5 +21,8 @@ public interface CloseFeignClient {
 
     @FeignRequestMapping(uri = "/material/test", type = "POST")
     CommonReturnType test(@RequestBody Material material);
+
+    @FeignRequestMapping(uri = "/material/name/{name}", type = "GET")
+    CommonReturnType getByName(@PathVariable("name") String name);
 }
 
