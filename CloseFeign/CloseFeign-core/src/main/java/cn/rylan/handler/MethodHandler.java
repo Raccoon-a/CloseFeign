@@ -9,12 +9,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Data
 public class MethodHandler {
 
-    private Map<Parameter, Object> paramMap = new HashMap<>();
+    private Map<Parameter, Object> paramMap = new ConcurrentHashMap<>();
 
     private Method method;
 
@@ -32,6 +33,7 @@ public class MethodHandler {
             paramMap.put(param,values[index++]);
         }
     }
+
 
     public MethodTemplate handler() {
         Class<?> returnType = this.method.getReturnType();

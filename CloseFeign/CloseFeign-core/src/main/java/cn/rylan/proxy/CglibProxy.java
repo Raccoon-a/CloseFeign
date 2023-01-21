@@ -6,9 +6,10 @@ import cn.rylan.balancer.Balancer;
 import cn.rylan.discovery.ServiceDiscovery;
 import cn.rylan.handler.RequestHandler;
 import cn.rylan.handler.URLHandler;
-import cn.rylan.http.RequestInterceptor;
 import cn.rylan.model.MethodTemplate;
 import cn.rylan.model.ServiceInstance;
+import cn.rylan.springboot.Properties;
+import cn.rylan.springboot.SpringBeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -27,11 +28,9 @@ public class CglibProxy implements MethodInterceptor {
 
     private Balancer balancer;
 
-    private RequestInterceptor interceptor;
 
-    public CglibProxy(String serviceName, DiscoveryClient discoveryClient, String balanceType, RequestInterceptor interceptor) {
-        this.interceptor = interceptor;
-        init(serviceName, discoveryClient, balanceType);
+    public CglibProxy(String serviceName, DiscoveryClient discoveryClient) {
+        init(serviceName, discoveryClient);
     }
 
     @SuppressWarnings("unchecked")
@@ -67,18 +66,19 @@ public class CglibProxy implements MethodInterceptor {
             log.info(type + ": => {}", URL);
             //远程调用
             MethodTemplate methodTemplate = urlHandler.getMethodTemplate();
-            RequestHandler request = new RequestHandler(methodTemplate,interceptor);
+            RequestHandler request = new RequestHandler(methodTemplate);
             return request.http(URL, type);
         }
         return null;
     }
 
 
-    private void init(String serviceName, DiscoveryClient discoveryClient, String balanceType) {
+    private void init(String serviceName, DiscoveryClient discoveryClient) {
         //服务发现
         ServiceDiscovery serviceDiscovery = new ServiceDiscovery(discoveryClient);
         List<ServiceInstance> instances = serviceDiscovery.getAllService(serviceName);
 
+        String balanceType = SpringBeanFactory.getBean(Properties.class).getBalancer();
         //SPI获取负载均衡器
         this.balancer = ExtensionLoad.getExtensionLoader(Balancer.class)
                 .getExtension(balanceType, new Object[]{instances}, List.class);

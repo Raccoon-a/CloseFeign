@@ -16,11 +16,6 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
     @Autowired
     private DiscoveryClient discoveryClient;
 
-    @Autowired
-    private RequestInterceptor interceptor;
-
-    @Value("${spring.cloud.closeFeign.balancer}")
-    private String balanceType;
 
 
     public CustomizeFactoryBean(Class<T> interfaceClass) {
@@ -34,7 +29,7 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
     public T getObject() {
         CloseFeignClient closeFeignClient = interfaceClass.getAnnotation(CloseFeignClient.class);
         String serviceName = closeFeignClient.serviceName();
-        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient,balanceType,interceptor);
+        CglibProxy cglibProxy = new CglibProxy(serviceName, discoveryClient);
         T proxy = (T) cglibProxy.getProxy(interfaceClass);
         if (proxy == null) {
             log.error("{}代理对象,生成失败", interfaceClass.getName());

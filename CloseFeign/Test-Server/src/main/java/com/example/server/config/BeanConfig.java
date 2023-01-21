@@ -7,15 +7,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 @Configuration
 public class BeanConfig {
@@ -26,6 +25,7 @@ public class BeanConfig {
             @Override
             public void apply(RequestTemplate template) {
                 RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+                assert requestAttributes != null;
                 HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
                 String cookie = request.getHeader("Cookie");
                 HttpHeaders headers = new HttpHeaders();
@@ -36,4 +36,5 @@ public class BeanConfig {
             }
         };
     }
+
 }

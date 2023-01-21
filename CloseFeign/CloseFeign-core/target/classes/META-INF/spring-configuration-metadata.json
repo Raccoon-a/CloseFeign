@@ -1,11 +1,17 @@
 {
   "groups": [
     {
-      "name": "",
-      "type": "cn.rylan.springboot.Config",
-      "sourceType": "cn.rylan.springboot.Config"
+      "name": "spring.cloud.close-feign",
+      "type": "cn.rylan.springboot.Properties",
+      "sourceType": "cn.rylan.springboot.Properties"
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "name": "spring.cloud.close-feign.balancer",
+      "type": "java.lang.String",
+      "sourceType": "cn.rylan.springboot.Properties"
+    }
+  ],
   "hints": []
 }

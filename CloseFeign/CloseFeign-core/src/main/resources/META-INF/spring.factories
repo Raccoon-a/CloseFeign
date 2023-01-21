@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.rylan.springboot.Config
+  cn.rylan.springboot.Properties,\
+  cn.rylan.springboot.SpringBeanFactory,\
+  cn.rylan.springboot.AutoConfig

@@ -24,10 +24,6 @@ public class URLHandler {
         methodTemplate = methodHandler.handler();
     }
 
-    public MethodTemplate getMethodTemplate() {
-        return methodTemplate;
-    }
-
     public String getURL() {
         String uri = handler();
         return "http://" + instance.getIp() + ":" + instance.getPort() + uri;
@@ -72,5 +68,8 @@ public class URLHandler {
         return uri;
     }
 
+    public MethodTemplate getMethodTemplate() {
+        return methodTemplate;
+    }
 
 }

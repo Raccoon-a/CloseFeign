@@ -11,6 +11,8 @@ public class RequestTemplate {
 
     private HttpEntity<String> entity;
 
+    private String body;
+
     public RequestTemplate(){
 
     }
@@ -28,10 +30,11 @@ public class RequestTemplate {
     }
 
     public HttpEntity<String> getEntity() {
-        return entity;
+        return this.entity = new HttpEntity<String>(body,this.headers);
     }
 
-    public void setEntity(HttpEntity<String> entity) {
-        this.entity = new HttpEntity<String>(entity.getBody(),this.headers);
+
+    public void body(String body){
+        this.body = body;
     }
 }

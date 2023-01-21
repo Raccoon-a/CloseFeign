@@ -21,7 +21,7 @@
 
 [√]  负载均衡
 
-[x]  超时处理
+[√]  超时处理
 
 [x]  可替换HttpClient
 
@@ -40,11 +40,13 @@ spring:
   application:
     name: test
   cloud:
-    closeFeign:
-      balancer: random //负载均衡配置 [roundRobin轮询 - random随机]
+    close-feign:
+      #负载均衡配置 [随机random - 轮询roundRobin]
+      balancer: roundRobin
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
 ```
 ```java
 @SpringBootApplication
@@ -98,6 +100,7 @@ public class TestController {
             @Override
             public void apply(RequestTemplate template) {
                 RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+                assert requestAttributes != null;
                 HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
                 String cookie = request.getHeader("Cookie");
                 HttpHeaders headers = new HttpHeaders();

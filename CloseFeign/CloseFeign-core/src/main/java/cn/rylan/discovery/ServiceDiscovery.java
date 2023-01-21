@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class ServiceDiscovery {
 
-    private DiscoveryClient discoveryClient;
+    private final DiscoveryClient discoveryClient;
 
     public ServiceDiscovery(DiscoveryClient discoveryClient) {
         this.discoveryClient = discoveryClient;

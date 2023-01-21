@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinBalancer implements Balancer {
 
-    private List<ServiceInstance> instanceList;
+    private final List<ServiceInstance> instanceList;
 
-    private static AtomicInteger index = new AtomicInteger(0);
+    private static final AtomicInteger index = new AtomicInteger(0);
 
     public RoundRobinBalancer(List<ServiceInstance> instanceList) {
         this.instanceList = instanceList;

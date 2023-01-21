@@ -19,12 +19,9 @@ public class TestController {
     @GetMapping("/test")
     public CommonReturnType test() {
         ArrayList<String> list = new ArrayList<>(Arrays.asList("西红柿", "玉米"));
-//        System.out.println(feignClient.getById(1L));
-//        System.out.println(feignClient.getById0());
-//        System.out.println(feignClient.getBatch(list));
-        System.out.println(feignClient.getByName("西红柿"));
+        System.out.println(feignClient.getBatch(list));
+        System.out.println(feignClient.getByName("西红柿")); //timeout
         return feignClient.test(new Material(1001L, "material", "icon", "分类", "desc"));
-
     }
 
 }
