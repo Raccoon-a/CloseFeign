@@ -12,17 +12,11 @@
         <module name="CloseFeign-core" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="CloseFeign (1)" target="1.8" />
-      <module name="CloseFeign (2)" target="11" />
-      <module name="Debug" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="CloseFeign" options="" />
       <module name="CloseFeign-core" options="-parameters" />
-      <module name="CloseFeign-core (1)" options="-parameters" />
       <module name="Test-Server" options="-parameters" />
     </option>
   </component>

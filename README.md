@@ -84,11 +84,10 @@ public class TestController {
 
     @GetMapping("/test")
     public CommonReturnType test() {
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("西红柿", "玉米"));
-        System.out.println(feignClient.getById());
-        System.out.println(feignClient.getById(1L));
-        System.out.println(feignClient.getBatch(list));
-        return feignClient.test(new Material(1001L, "material", "icon", "category", "desc"));
+        var list = List.of("西红柿", "玉米");
+        System.out.println("getBatch: " + feignClient.getBatch(list));
+        System.out.println(feignClient.test(new Material(1001L, "material", "icon", "分类", "desc")));
+        return feignClient.getByName("西红柿");
     }
     
 }
@@ -99,11 +98,11 @@ public class TestController {
         return new RequestInterceptor() {
             @Override
             public void apply(RequestTemplate template) {
-                RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+                var requestAttributes = RequestContextHolder.getRequestAttributes();
                 assert requestAttributes != null;
-                HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-                String cookie = request.getHeader("Cookie");
-                HttpHeaders headers = new HttpHeaders();
+                var request = ((ServletRequestAttributes) requestAttributes).getRequest();
+                var cookie = request.getHeader("Cookie");
+                var headers = new HttpHeaders();
                 headers.add("Cookie", cookie);
                 headers.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 headers.setContentType(MediaType.APPLICATION_JSON);
