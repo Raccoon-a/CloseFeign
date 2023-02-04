@@ -26,24 +26,57 @@ import com.example.server.feign.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 
 @RestController
 public class TestController {
 
     @Autowired
-    FeignClient feignClient;
+    private FeignClient feignClient;
+
+    @Autowired
+    private ExecutorService executor;
+
 
     @GetMapping("/test")
     public CommonReturnType test() {
+        //test
         var list = List.of("西红柿", "玉米");
-        System.out.println("getBatch: " + feignClient.getBatch(list));
-        System.out.println(feignClient.test(new Material(1001L, "material", "icon", "分类", "desc")));
-        System.out.println(feignClient.getRecipeByName("西红柿牛腩饭"));
-        return feignClient.getByName("西红柿");
+        var res0 = feignClient.getById(1L);
+        var res1 = feignClient.getByName("西红柿");
+        var res2 = feignClient.getBatch(list); //need auth
+
+        //async test
+        long startTime = System.currentTimeMillis();
+
+        var attributes = RequestContextHolder.getRequestAttributes();
+        var task1 = CompletableFuture.supplyAsync(() -> {
+            RequestContextHolder.setRequestAttributes(attributes);
+            System.out.println("getById");
+            return feignClient.getById(1L);
+        }, executor);
+
+        var task2 = CompletableFuture.supplyAsync(() -> {
+            RequestContextHolder.setRequestAttributes(attributes);
+            System.out.println("getByName");
+            return feignClient.getByName("西红柿");
+        }, executor);
+
+        try {
+            var res3 = task1.get();
+            var res4 = task2.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
+        return CommonReturnType.create("");
     }
 
 }

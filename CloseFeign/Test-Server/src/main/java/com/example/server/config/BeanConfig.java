@@ -36,9 +36,17 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.concurrent.*;
 
 @Configuration
 public class BeanConfig {
+
+
+    @Bean
+    public ExecutorService executor() {
+        return new ThreadPoolExecutor(10, 20, 20,
+                TimeUnit.SECONDS, new SynchronousQueue<>(), Executors.defaultThreadFactory());
+    }
 
     @Bean
     public RequestInterceptor interceptor() {

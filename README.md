@@ -15,15 +15,8 @@
 正好最近在改之前写的自定义应用层协议RPC的各种bug，用Netty构建服务端，客户端实现双方通信写麻了，所以我就在想试试写一下Feign这种以访问对方暴露出HTTP REST接口的方式远程调用的框架，写个小demo由于不知道这个框架叫什么，众所周知SpringCloud有个组件叫OpenFeign，所以就叫CloseFeign了（狗头）
 </details>
 
-## DEMO项目简述
-
-[√]  服务发现
-
-[√]  负载均衡
-
-[√]  超时处理
-
-[x]  可替换HttpClient
+## demo
+https://github.com/Raccoon-a/CloseFeign/tree/main/demo
 
 ## Getting started
 
@@ -31,7 +24,15 @@
 
 `cd .\CloseFeign\CloseFeign-core\target\`
 
-`mvn install:install-file -Dfile=CloseFeign-core-0.0.1-SNAPSHOT.jar -DgroupId=cn.rylan -DartifactId=CloseFeign -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar`
+`$ mvn install:install-file -Dfile=spring-cloud-starter-CloseFeign-1.0.0-jar-with-dependencies.jar -DgroupId=cn.rylan -DartifactId=spring-cloud-starter-CloseFeign -Dversion=1.0.0 -Dpackaging=jar`
+
+```xml
+<dependency>
+  <groupId>cn.rylan</groupId>
+  <artifactId>spring-cloud-starter-CloseFeign</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 ```yaml
 server:

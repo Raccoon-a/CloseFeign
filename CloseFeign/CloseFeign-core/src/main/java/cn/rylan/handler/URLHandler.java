@@ -80,7 +80,6 @@ public class URLHandler {
 
     private String replace(String uri, String target, String param) {
         String s = "{" + target + "}";
-        System.out.println(s.hashCode());
         return uri.replace(s, param);
     }
 
