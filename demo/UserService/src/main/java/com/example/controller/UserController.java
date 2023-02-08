@@ -24,6 +24,7 @@ import com.example.model.User;
 import com.example.response.CommonReturnType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,15 @@ public class UserController {
     public CommonReturnType getBatch(@RequestBody List<Integer> ids) {
         var list = ids.stream().map(id -> {
             return new User(id, "rylan" + id);
+        }).collect(Collectors.toList());
+
+        return CommonReturnType.create(list);
+    }
+
+    @RequestMapping(value = "/{type}/list", method = RequestMethod.POST)
+    public CommonReturnType getMethodList(@PathVariable("type") String type, @RequestBody List<String> methods,@PathParam("id") Integer id) {
+        var list = methods.stream().map(method -> {
+            return id + ": " + type + ": " + method;
         }).collect(Collectors.toList());
 
         return CommonReturnType.create(list);

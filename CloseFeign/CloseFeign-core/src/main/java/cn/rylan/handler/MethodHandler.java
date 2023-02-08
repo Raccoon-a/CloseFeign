@@ -25,6 +25,7 @@ import lombok.Data;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.websocket.server.PathParam;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -68,7 +69,8 @@ public class MethodHandler {
             } else if(key.isAnnotationPresent(RequestBody.class)){
                 body.set(value);
             }else {
-                paramValues.put(key.getName(), value);
+                PathParam pathParam = key.getAnnotation(PathParam.class);
+                paramValues.put(pathParam.value(), value);
             }
         });
 

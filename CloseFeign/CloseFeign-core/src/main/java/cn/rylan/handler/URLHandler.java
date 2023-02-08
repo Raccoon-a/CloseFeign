@@ -40,7 +40,7 @@ public class URLHandler {
     public URLHandler(ServiceInstance instance, Method method, Object[] objects, String uri) {
         this.uri = uri;
         this.instance = instance;
-        MethodHandler  methodHandler = new MethodHandler(method, objects);
+        MethodHandler methodHandler = new MethodHandler(method, objects);
         methodTemplate = methodHandler.handler();
     }
 
@@ -64,9 +64,6 @@ public class URLHandler {
             pathValues.forEach((name, value) -> {
                 uri = replace(this.uri, name, value.toString());
             });
-        }
-        if (body != null) {
-            return uri;
         }
         if (paramValues.size() > 0) {
             uri = this.uri + "?";

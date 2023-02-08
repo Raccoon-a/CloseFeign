@@ -47,10 +47,10 @@ public class TestController {
     @GetMapping("/test")
     public CommonReturnType test() {
         //test
-        var list = List.of("西红柿", "玉米");
-        var res0 = feignClient.getById(1L);
-        var res1 = feignClient.getByName("西红柿");
-        var res2 = feignClient.getBatch(list); //need auth
+//        var list = List.of("西红柿", "玉米");
+//        var res0 = feignClient.getById(1L);
+//        var res1 = feignClient.getByName("西红柿");
+//        var res2 = feignClient.getBatch(list); //need auth
 
         //async test
         long startTime = System.currentTimeMillis();
@@ -76,6 +76,10 @@ public class TestController {
         }
 
         System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
+
+        System.out.println(feignClient.getTest(5L));
+
+        System.out.println(feignClient.getMethodList("HTTP_1.1", List.of("GET", "POST", "PUT"), 1));
         return CommonReturnType.create("");
     }
 

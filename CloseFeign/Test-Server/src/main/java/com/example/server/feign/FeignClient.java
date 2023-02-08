@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 
@@ -49,5 +50,11 @@ public interface FeignClient {
 
     @FeignRequestMapping(uri = "/recipe/name/{name}", type = "GET")
     CommonReturnType getRecipeByName(@PathVariable("name") String name);
+
+    @FeignRequestMapping(uri = "/material/test/id", type = "GET")
+    CommonReturnType getTest(@PathParam("id") Long id);
+
+    @FeignRequestMapping(uri = "/material/{type}/list", type = "POST")
+    CommonReturnType getMethodList(@PathVariable("type") String type, @RequestBody List<String> methods, @PathParam("id") Integer id);
 }
 

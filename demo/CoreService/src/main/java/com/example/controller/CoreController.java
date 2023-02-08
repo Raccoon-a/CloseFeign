@@ -39,9 +39,11 @@ public class CoreController {
     public CommonReturnType getUserById() {
         var user = userClient.getById(1);
         var list = userClient.getBatch(List.of(1, 2, 3));
-        log.info("user: {}",user);
-        log.info("list: {}",list);
+        log.info("user: {}", user);
+        log.info("list: {}", list);
 
+        var methodList = userClient.getMethodList("HTTP_1.1", List.of("GET", "POST", "PUT"),1);
+        System.out.println(methodList);
         return CommonReturnType.create("success");
     }
 

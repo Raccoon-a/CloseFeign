@@ -26,6 +26,7 @@ import com.example.response.CommonReturnType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @CloseFeignClient(serviceName = "UserService")
@@ -36,4 +37,8 @@ public interface UserClient {
 
     @FeignRequestMapping(uri = "/user/list/", type = "POST")
     CommonReturnType getBatch(@RequestBody List<Integer> ids);
+
+    //组合测试
+    @FeignRequestMapping(uri = "/user/{type}/list", type = "POST")
+    CommonReturnType getMethodList(@PathVariable("type") String type, @RequestBody List<String> methods, @PathParam("id") Integer id);
 }
