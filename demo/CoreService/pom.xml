@@ -25,5 +25,9 @@
             <artifactId>spring-cloud-starter-CloseFeign</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+
     </dependencies>
+
+
 </project>

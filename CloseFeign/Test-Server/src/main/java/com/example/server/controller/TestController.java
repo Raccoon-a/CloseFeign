@@ -53,29 +53,29 @@ public class TestController {
 //        var res2 = feignClient.getBatch(list); //need auth
 
         //async test
-        long startTime = System.currentTimeMillis();
-
-        var attributes = RequestContextHolder.getRequestAttributes();
-        var task1 = CompletableFuture.supplyAsync(() -> {
-            RequestContextHolder.setRequestAttributes(attributes);
-            System.out.println("getById");
-            return feignClient.getById(1L);
-        }, executor);
-
-        var task2 = CompletableFuture.supplyAsync(() -> {
-            RequestContextHolder.setRequestAttributes(attributes);
-            System.out.println("getByName");
-            return feignClient.getByName("西红柿");
-        }, executor);
-
-        try {
-            var res3 = task1.get();
-            var res4 = task2.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
+//        long startTime = System.currentTimeMillis();
+//
+//        var attributes = RequestContextHolder.getRequestAttributes();
+//        var task1 = CompletableFuture.supplyAsync(() -> {
+//            RequestContextHolder.setRequestAttributes(attributes);
+//            System.out.println("getById");
+//            return feignClient.getById(1L);
+//        }, executor);
+//
+//        var task2 = CompletableFuture.supplyAsync(() -> {
+//            RequestContextHolder.setRequestAttributes(attributes);
+//            System.out.println("getByName");
+//            return feignClient.getByName("西红柿");
+//        }, executor);
+//
+//        try {
+//            var res3 = task1.get();
+//            var res4 = task2.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
 
         System.out.println(feignClient.getTest(5L));
 

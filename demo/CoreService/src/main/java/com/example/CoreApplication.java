@@ -23,7 +23,9 @@ package com.example;
 import cn.rylan.annotation.EnableCloseFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
+@EnableEurekaClient
 @SpringBootApplication
 @EnableCloseFeign(basePackages = "com.example.feign")
 public class CoreApplication {
