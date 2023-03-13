@@ -16,7 +16,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="CoreService" options="-parameters" />
       <module name="UserService" options="-parameters" />
-      <module name="demo" options="-parameters" />
+      <module name="demo" options="" />
     </option>
   </component>
 </project>

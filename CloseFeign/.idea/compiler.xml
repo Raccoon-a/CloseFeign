@@ -7,17 +7,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Test-Server" />
+        <module name="spring-cloud-starter-CloseFeign" />
+        <module name="common" />
         <module name="CloseFeign-core (1)" />
+        <module name="provider" />
         <module name="CloseFeign-core" />
+        <module name="customer" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Test-Server" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="CloseFeign" options="" />
       <module name="CloseFeign-core" options="-parameters" />
       <module name="Test-Server" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="customer" options="-parameters" />
+      <module name="provider" options="-parameters" />
+      <module name="spring-cloud-starter-CloseFeign" options="-parameters" />
     </option>
   </component>
 </project>

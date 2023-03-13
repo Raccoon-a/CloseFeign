@@ -36,8 +36,6 @@ public class CustomizeFactoryBean<T> implements FactoryBean<T> {
     @Autowired
     private DiscoveryClient discoveryClient;
 
-
-
     public CustomizeFactoryBean(Class<T> interfaceClass) {
         this.interfaceClass = interfaceClass;
     }

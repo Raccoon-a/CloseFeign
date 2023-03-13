@@ -7,6 +7,12 @@
     <name>CloseFeign</name>
     <version>1.0-SNAPSHOT</version>
 
+    <modules>
+        <module>provider</module>
+        <module>customer</module>
+        <module>common</module>
+    </modules>
+
 
     <packaging>pom</packaging>
     <parent>
