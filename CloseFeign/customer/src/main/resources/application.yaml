@@ -6,6 +6,8 @@ spring:
   cloud:
     close-feign:
       balancer: random
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
